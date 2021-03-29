@@ -5,17 +5,16 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { VueLoaderPlugin } = require('vue-loader');
-
+const webpack = require('webpack')
 module.exports = (env = {}) => ({
   mode: "development",
   context: path.resolve(__dirname, 'src'),
   entry: {
-    app: './view/app.ts'
+    app: './renderer/app.ts'
   },
   output: {
     path: path.resolve(__dirname, "dist/view"),
     filename: "[name].[fullhash:6].bundle.js",
-    publicPath: "http://localhost:8080/"
   },
   module: {
     rules: [
@@ -77,6 +76,8 @@ module.exports = (env = {}) => ({
       }
     ],
   },
+
+
   resolve: {
     extensions: ['.ts', '.js', '.vue', '.json'],
     alias: {
@@ -84,24 +85,22 @@ module.exports = (env = {}) => ({
     }
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new MiniCssExtractPlugin(),
     new HtmlWebpackPlugin({
-      template: './view/public/index.html'
+      template: './renderer/public/index.html'
     }),
     new WebpackBar(),
     new VueLoaderPlugin(),
   ],
   devServer: {
-    contentBase: path.join(__dirname, 'src/public'),
-    writeToDisk: true,
-    publicPath: "",
     port: 8080,
-    index: './index.html',
-    hot: true,
-    overlay: {
-      warnings: true,
-      errors: true
-    },
     historyApiFallback: true,
+    static: [
+      path.join(__dirname, 'dist/renderer')
+  ],
+    dev: {
+      writeToDisk: true
+    }
   }
 });

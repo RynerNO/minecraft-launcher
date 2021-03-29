@@ -1,15 +1,12 @@
 <template lang="pug">
 div.p-col-3.p-d-flex.p-ai-center.p-flex-column
-    img(src="../assets/logo.png").p-col-6
-    h1 Vue 3
-    h2 PrimeFlex && PrimeVue
-    h3 Template   
+    Button(label="Играть" class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3"  @click.prevent="launchGame")
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { useRouter } from 'vue-router'
-
+import { useStore } from 'vuex'
+import Button from 'primevue/button'
 
 export default defineComponent({
     name: 'Home',
@@ -17,8 +14,11 @@ export default defineComponent({
      
     },
     setup() {
-        const router = useRouter();
-        router.push('/login')
+        const store = useStore()
+        const launchGame = () => {}
+        return {
+            launchGame
+        }
     }
     
    
