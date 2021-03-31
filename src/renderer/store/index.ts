@@ -4,6 +4,7 @@ import SecureLS from "secure-ls";
 const ls = new SecureLS({ isCompression: false });
 import { axios } from '../util'
 import { Commit } from 'vuex/types/index';
+import { authResponse, loginData, registerData } from '../types';
 export type State = typeof initialState
 const initialState = {
   auth: {
@@ -58,7 +59,7 @@ const actions = {
 
 }
 export const store = createStore({ 
-    initialState, 
+    state: initialState, 
     mutations,
     actions,
     plugins: [createPersistedState({

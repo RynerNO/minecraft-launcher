@@ -1,23 +1,24 @@
-interface loginData {
+export interface loginData {
     email: string,
     password: string
 
 }
 
-interface registerData {
+export interface registerData {
     email: string,
     name: string,
     password: string
 }
 
 
-interface Window {
+export interface Window {
         config: {
             AUTH_URL: string
         };
+        ipcRenderer: ipcRenderer
     }
   
-interface authResponse {
+export interface authResponse {
     id: string;
     name: string;
     selectedProfile: {
@@ -32,4 +33,20 @@ interface authResponse {
     avaliableProfiles: {};
     status: boolean;
     
+}
+
+export interface ipcRenderer {
+    send: (channel: string, data?: any) => void;
+    receive:  (channel: string, func: Function) => void
+}
+
+
+
+declare global {
+    interface Window {
+        config: {
+            AUTH_URL: string
+        };
+        ipcRenderer: ipcRenderer
+    }
 }

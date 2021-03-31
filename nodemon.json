@@ -1,4 +1,4 @@
 {
     "verbose": true,
-    "ignore": ["node_modules", "src", "dist/view"]
+    "ignore": ["node_modules", "src", "dist/renderer", "dist/app/resources"]
   }

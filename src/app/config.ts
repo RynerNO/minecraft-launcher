@@ -1,6 +1,4 @@
-import dotenv from 'dotenv';
-dotenv.config()
 
 export default {
-    AUTH_URL: process.env.AUTH_URL || 'http://localhost:5001'
+    AUTH_URL: 'https://minecraft-auth-server.herokuapp.com/v1/auth'
 }

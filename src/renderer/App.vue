@@ -13,7 +13,7 @@ export default defineComponent({
   setup() {
 	  const store = useStore();
 	  const router = useRouter();
-
+		console.log(store.state)
 	  if(store.state.auth.status) router.push('/')
 	  else router.push('login')
   } 	

@@ -6,14 +6,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { VueLoaderPlugin } = require('vue-loader');
 const webpack = require('webpack')
+const dotenv = require('dotenv')
+dotenv.config()
 module.exports = (env = {}) => ({
-  mode: "development",
+  mode: process.env.MODE || "development",
   context: path.resolve(__dirname, 'src'),
   entry: {
     app: './renderer/app.ts'
   },
   output: {
-    path: path.resolve(__dirname, "dist/view"),
+    path: path.resolve(__dirname, "dist/renderer"),
     filename: "[name].[fullhash:6].bundle.js",
   },
   module: {
