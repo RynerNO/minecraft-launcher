@@ -48,5 +48,10 @@ export const logout = () => {
 };
 
 export const launchGame = () => {
-	ipc.send('launchGame', JSON.parse(JSON.stringify(store.state.auth)));
+	ipc.send('launchGame', JSON.parse(JSON.stringify({ ...store.state.auth, ...store.state.settings })));
+};
+
+export const changeRamUsage = (e: { value: number }) => {
+	console.log(e);
+	store.commit('changeRamUsage', e.value);
 };

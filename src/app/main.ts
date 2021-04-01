@@ -106,6 +106,7 @@ ipcMain.on(
 			clientToken: string;
 			avaliableProfiles: {};
 			status: boolean;
+			ramUsage: number;
 		}
 	) => {
 		log('Launch Game Event');
@@ -119,10 +120,7 @@ ipcMain.on(
 				authorization: {
 					access_token: profile.accessToken,
 					name: profile.name,
-					client_token: profile.clientToken,
 					uuid: profile.id,
-					selected_profile: profile.selectedProfile,
-					user_properties: JSON.stringify({}),
 				},
 				javaPath: path.resolve(path.dirname(app.getPath('exe')), 'resources', 'minecraft', 'jdk-win64/bin/java.exe'),
 				root: path.resolve(path.dirname(app.getPath('exe')), 'resources', 'minecraft'),
@@ -132,8 +130,8 @@ ipcMain.on(
 					custom: 'forge-36.1.0',
 				},
 				memory: {
-					max: '4G',
-					min: '2G',
+					max: `${profile.ramUsage / 1024}G`,
+					min: `${profile.ramUsage / 1024}G`,
 				},
 			};
 

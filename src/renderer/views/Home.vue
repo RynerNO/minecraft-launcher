@@ -12,7 +12,10 @@ div
                         
             
         template(#end)
-            Button( label="Настройки" icon="pi pi-fw pi-cog" class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4" )
+            Button( label="Настройки" icon="pi pi-fw pi-cog" class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4" overlay-parent="true" @click="settingsOverlay.toggle($event)")
+            OverlayPanel(ref="settingsOverlay" class="r-settings-overlay")
+                p Память: {{ ramSlider }}MB
+                Slider( :step="1024" :min="2048" :max="8192" v-model="ramSlider" @slideend="changeRamUsage")
             Button( label="Выйти" icon="pi pi-fw pi-power-off" class="p-button-raised p-ml-3 p-button-danger p-button-text p-pl-4 p-pr-4" @click="logout")
     div.p-d-flex.p-ai-center.p-jc-center.p-flex-column.r-container
         div.launchStatus(v-if="showLaunchStatus")
@@ -33,18 +36,15 @@ import { defineComponent, inject, ref } from 'vue'
 import { useStore } from 'vuex';
 import { ipcRenderer } from '../types'
 
-import { getServerStatus, logout, launchGame} from './Home/functions'
-
-
-//@ts-ignore
-import Logo from '../assets/logo.png'
+import { getServerStatus, logout, launchGame, changeRamUsage} from './Home/functions'
 
 import ProgressBar from 'primevue/progressbar';
 import Button from 'primevue/button'
 import ServerStatus from '../components/ServerStatus.vue'
 import Menubar from 'primevue/menubar';
 import Avatar from 'primevue/avatar';
-import Badge from 'primevue/badge';
+import OverlayPanel from 'primevue/overlaypanel';
+import Slider from 'primevue/slider';
 export default defineComponent({
     name: 'Home',
     components: {
@@ -53,7 +53,8 @@ export default defineComponent({
      ServerStatus,
      Menubar,
      Avatar,
-     Badge
+     OverlayPanel,
+     Slider
     },
     setup() {
         const store = useStore()
@@ -62,7 +63,8 @@ export default defineComponent({
         const launchStatus = ref('Проверка файлов')
         const launchProgress = ref(0)
         const readyToLaunch = ref(true)
-
+        const settingsOverlay = ref()
+        const ramSlider = ref(store.state.settings.ramUsage)
         ipc.receive('gameDownload', ({ progress } : { progress: number}) => {
                 showLaunchStatus.value = true
                 readyToLaunch.value = false
@@ -100,7 +102,9 @@ export default defineComponent({
             logout,
             serverStatus,
             store,
-            Logo
+            settingsOverlay,
+            ramSlider,
+            changeRamUsage
         }
     }
     
@@ -117,6 +121,11 @@ export default defineComponent({
     bottom: 10px
     max-width: 300px
     width: 100%
-::v-deep(.p-menubar-button) 
+
+</style>
+<style lang="sass">
+.p-menubar-button
     display: none !important
+.r-settings-overlay
+    min-width: 240px
 </style>
