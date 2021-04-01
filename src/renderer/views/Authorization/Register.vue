@@ -16,10 +16,10 @@ div.p-col-12.p-d-flex.p-ai-center.p-flex-column.p-jc-center.r-container
 	div(class="r-field-container").p-inputgroup
 		span(class="p-inputgroup-addon")
 			i(class="pi pi-lock")
-		InputText(placeholder="Пароль" @blur="validatePassword" v-model="formData.password.value" :class="{'p-invalid' : formData.password.invalid}")
+		InputText(placeholder="Пароль" type="password" @blur="validatePassword" v-model="formData.password.value" :class="{'p-invalid' : formData.password.invalid}")
 	p(class="r-field-error" v-if="formData.password.invalid") Пароль должен содержать не менее восьми знаков
 	Button(label="Создать аккаунт" class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3" icon="pi pi-chevron-right" iconPos="right" :disabled="formData.invalid" @click.prevent="submitForm")
-	p Уже есть акканут? 
+	p(class="p-mt-3") Уже есть акканут? 
 		router-link(to="login") Войти
 </template>
 

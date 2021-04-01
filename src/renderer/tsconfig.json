@@ -10,12 +10,6 @@
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "@components/*": ["src/components/*"],
-    },
     "lib": [
       "esnext",
       "dom",

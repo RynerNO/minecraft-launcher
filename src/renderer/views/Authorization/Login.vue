@@ -13,7 +13,7 @@ div.p-col-12.p-d-flex.p-ai-center.p-flex-column.p-jc-center.r-container
 		InputText(placeholder="Пароль" type="password" @blur="validatePassword" v-model="formData.password.value" :class="{'p-invalid' : formData.password.invalid}")
 	p(class="r-field-error" v-if="formData.password.invalid") Пароль должен содержать не менее восьми знаков
 	Button(label="Войти" class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3" icon="pi pi-chevron-right" iconPos="right" :disabled="formData.invalid" @click.prevent="submitForm")
-	p Нет аккаунта? 
+	p(class="p-mt-3") Нет аккаунта? 
 		router-link(to="register") Регистрация
 </template>
 

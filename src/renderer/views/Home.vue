@@ -3,77 +3,76 @@ div.p-col-12.p-d-flex.p-ai-center.p-jc-center.p-flex-column.r-container
     
     div.launchStatus(v-if="showLaunchStatus")
         p {{ launchStatus }}
-        ProgressBar(:value="launchProgress" v-if="showProgressBar") 
-    Button(label="Играть" class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3" :disabled="!readyToLaunch"  @click.prevent="launchGame")
+        ProgressBar(:value="launchProgress" v-if="launchProgress > 0") 
+    Button(label="Играть" :icon="(!readyToLaunch) ? 'pi pi-spin pi-spinner': ''" class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3" :disabled="!readyToLaunch"  @click.prevent="launchGame")
     Button(label="Сменить аккаунт" class="p-button-raised  p-button-danger p-button-text p-pl-4 p-pr-4 p-mt-3" @click.prevent="logout")
+    ServerStatus(v-bind="serverStatus")
 </template>
 
 <script lang="ts">
 import { defineComponent, inject, ref } from 'vue'
-import { useStore } from 'vuex'
-import Button from 'primevue/button'
 import { ipcRenderer } from '../types'
+
+import { getServerStatus, logout, launchGame} from './Home/functions'
+
 import ProgressBar from 'primevue/progressbar';
-import { useRouter } from 'vue-router';
+import Button from 'primevue/button'
+import ServerStatus from '../components/ServerStatus.vue'
+
 export default defineComponent({
     name: 'Home',
     components: {
      Button,
-     ProgressBar
+     ProgressBar,
+     ServerStatus
     },
-    // @ts-ignore
-    setup({ props }) {
-        const store = useStore()
-        const router = useRouter()
+    setup() {
         const ipc: ipcRenderer = <ipcRenderer>inject('ipcRenderer')
         const showLaunchStatus = ref(false)
         const launchStatus = ref('Проверка файлов')
         const launchProgress = ref(0)
         const readyToLaunch = ref(true)
-        const showProgressBar = ref(false)
-        const launchGame = () => {      
-               
-        
-            ipc.send('launchGame', JSON.parse(JSON.stringify(store.state.auth)));
-            showLaunchStatus.value = true
-            ipc.receive('gameDownload', ({ progress } : { progress: number}) => {
+
+        ipc.receive('gameDownload', ({ progress } : { progress: number}) => {
+                showLaunchStatus.value = true
                 readyToLaunch.value = false
-                showProgressBar.value = true;
                 launchStatus.value = "Загрузка файлов"
                 launchProgress.value = progress
             })
             ipc.receive('unpackGame', ({ progress }: { progress: number}) => {
+                showLaunchStatus.value = true
                 readyToLaunch.value = false;
-                 showProgressBar.value = true;
                 launchStatus.value = "Распаковка файлов"
                 launchProgress.value = progress
             })
 
             ipc.receive('gameDownloadFinished', () => {
+                showLaunchStatus.value = true
                 readyToLaunch.value = true;
-                showProgressBar.value = false;
+                launchProgress.value = 0
                 launchStatus.value = "Готово к запуску"
             })
 
 
             ipc.receive('gameLaunching', (data: any) => {
+                showLaunchStatus.value = false
                 readyToLaunch.value = false;
-                showProgressBar.value = false;
-                launchStatus.value = "Игра запускается!"
             })
-        }
-        const logout = () => {
-            store.commit('unsetAuth')
-            router.push('login');
-        }
+
+        
+
+      
+        
+
+        const serverStatus = getServerStatus();
         return {
             launchGame,
             launchStatus,
             launchProgress,
             showLaunchStatus,
             readyToLaunch,
-            showProgressBar,
-            logout
+            logout,
+            serverStatus,
         }
     }
     
