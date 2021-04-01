@@ -1,6 +1,6 @@
 <template lang="pug">
 div.r-status-container
-    p(class="p-text-center") Server
+    p(class="p-text-center") Server Info
     p(class="p-d-flex p-ai-center ") Status: 
         i(class="pi pi-circle-on p-ml-4 r-status-icon" :style="{'color': (online) ? '#00cc6e' : '#848484'}")
         span(class="p-ml-1" :style="{'color': (online) ? '#00cc6e' : '#848484'}") {{ (online ) ? "Online" : "Offline"}}
@@ -63,7 +63,7 @@ export default defineComponent({
 .r-status-container 
     background: var(--surface-0)
     padding: 15px
-    min-width: 300px
+    width: 100%
     border-radius: 5px
     box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 3px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)
 

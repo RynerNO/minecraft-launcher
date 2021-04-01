@@ -1,12 +1,20 @@
 <template lang="pug">
-div.p-col-12.p-d-flex.p-ai-center.p-jc-center.p-flex-column.r-container
-    
-    div.launchStatus(v-if="showLaunchStatus")
-        p {{ launchStatus }}
-        ProgressBar(:value="launchProgress" v-if="launchProgress > 0") 
-    Button(label="Играть" :icon="(!readyToLaunch) ? 'pi pi-spin pi-spinner': ''" class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3" :disabled="!readyToLaunch"  @click.prevent="launchGame")
-    Button(label="Сменить аккаунт" class="p-button-raised  p-button-danger p-button-text p-pl-4 p-pr-4 p-mt-3" @click.prevent="logout")
-    ServerStatus(v-bind="serverStatus")
+div
+    Menubar
+        template(#end)
+            Button(label="Выйти" class="p-button-raised  p-button-danger p-button-text" @click.prevent="logout")
+    div.p-d-flex.p-ai-center.p-jc-center.p-flex-column.r-container
+        div.launchStatus(v-if="showLaunchStatus")
+            p {{ launchStatus }}
+            ProgressBar(:value="launchProgress" v-if="launchProgress > 0") 
+        Button(
+        label="Играть" 
+        :icon="(!readyToLaunch) ? 'pi pi-spin pi-spinner': ''" 
+        class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3" 
+        :disabled="!readyToLaunch"  
+        @click.prevent="launchGame"
+        )
+    ServerStatus(v-bind="serverStatus" class="r-server-status")
 </template>
 
 <script lang="ts">
@@ -18,13 +26,14 @@ import { getServerStatus, logout, launchGame} from './Home/functions'
 import ProgressBar from 'primevue/progressbar';
 import Button from 'primevue/button'
 import ServerStatus from '../components/ServerStatus.vue'
-
+import Menubar from 'primevue/menubar';
 export default defineComponent({
     name: 'Home',
     components: {
      Button,
      ProgressBar,
-     ServerStatus
+     ServerStatus,
+     Menubar
     },
     setup() {
         const ipc: ipcRenderer = <ipcRenderer>inject('ipcRenderer')
@@ -82,22 +91,11 @@ export default defineComponent({
 })
 </script>
 
-<style lang="sass">
-img 
-    max-width: 100%
-h1
-    text-align: center
-
-
-p 
-    margin-top: 0
-.p-terminal 
-    background: #212121 !important
-
-.r-terminal
-    margin-top: 15px
+<style lang="sass" scoped>
+.r-server-status 
+    position: fixed
+    left: 10px
+    bottom: 10px
+    max-width: 300px
     width: 100%
-    max-width: 500px
-    height: 500px
-
 </style>
