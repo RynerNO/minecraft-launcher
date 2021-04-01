@@ -1,8 +1,19 @@
 <template lang="pug">
 div
-    Menubar
+    Menubar()
+        template(#start)
+            div(class="p-d-flex")
+                Avatar(icon="pi pi-user" size="large")
+                div(class="p-d-flex p-flex-column p-ml-2")
+                    span() {{ store.state.auth.name}}
+                    span(class="p-d-flex p-mt-2")
+                        span 0$
+                        i(class="p-ml-2 pi pi-wallet") 
+                        
+            
         template(#end)
-            Button(label="Выйти" class="p-button-raised  p-button-danger p-button-text" @click.prevent="logout")
+            Button( label="Настройки" icon="pi pi-fw pi-cog" class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4" )
+            Button( label="Выйти" icon="pi pi-fw pi-power-off" class="p-button-raised p-ml-3 p-button-danger p-button-text p-pl-4 p-pr-4" @click="logout")
     div.p-d-flex.p-ai-center.p-jc-center.p-flex-column.r-container
         div.launchStatus(v-if="showLaunchStatus")
             p {{ launchStatus }}
@@ -19,23 +30,33 @@ div
 
 <script lang="ts">
 import { defineComponent, inject, ref } from 'vue'
+import { useStore } from 'vuex';
 import { ipcRenderer } from '../types'
 
 import { getServerStatus, logout, launchGame} from './Home/functions'
+
+
+//@ts-ignore
+import Logo from '../assets/logo.png'
 
 import ProgressBar from 'primevue/progressbar';
 import Button from 'primevue/button'
 import ServerStatus from '../components/ServerStatus.vue'
 import Menubar from 'primevue/menubar';
+import Avatar from 'primevue/avatar';
+import Badge from 'primevue/badge';
 export default defineComponent({
     name: 'Home',
     components: {
      Button,
      ProgressBar,
      ServerStatus,
-     Menubar
+     Menubar,
+     Avatar,
+     Badge
     },
     setup() {
+        const store = useStore()
         const ipc: ipcRenderer = <ipcRenderer>inject('ipcRenderer')
         const showLaunchStatus = ref(false)
         const launchStatus = ref('Проверка файлов')
@@ -68,11 +89,7 @@ export default defineComponent({
                 readyToLaunch.value = false;
             })
 
-        
-
-      
-        
-
+    
         const serverStatus = getServerStatus();
         return {
             launchGame,
@@ -82,6 +99,8 @@ export default defineComponent({
             readyToLaunch,
             logout,
             serverStatus,
+            store,
+            Logo
         }
     }
     
@@ -98,4 +117,6 @@ export default defineComponent({
     bottom: 10px
     max-width: 300px
     width: 100%
+::v-deep(.p-menubar-button) 
+    display: none !important
 </style>
