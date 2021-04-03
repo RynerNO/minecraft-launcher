@@ -21,16 +21,16 @@ div
         div(class="r-server-container p-d-flex p-jc-evenly p-ai-center")
             ServerStatus(v-bind="serverStatus" class="r-server-status" )
             div(class="p-d-flex p-ai-center p-jc-center p-flex-column r-launch-container")
-            div.launchStatus(v-if="showLaunchStatus")
-                    p {{ launchStatus }}
-                    ProgressBar(:value="launchProgress" v-if="launchProgress > 0") 
-            Button(
-            label="Играть" 
-            :icon="(!readyToLaunch) ? 'pi pi-spin pi-spinner': ''" 
-            class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3 p-button-lg" 
-            :disabled="!readyToLaunch"  
-            @click.prevent="launchGame"
-            )
+                div.launchStatus(v-if="showLaunchStatus")
+                        p {{ launchStatus }}
+                        ProgressBar(:value="launchProgress" v-if="launchProgress > 0") 
+                Button(
+                label="Играть" 
+                :icon="(!readyToLaunch) ? 'pi pi-spin pi-spinner': ''" 
+                class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3 p-button-lg" 
+                :disabled="!readyToLaunch"  
+                @click.prevent="launchGame"
+                )
     div(class="r-bottom-social")
             div(@click.prevent="openInBrowser('https://discord.gg/mNvhZtm')")
                 i(class="pi pi-discord ")
@@ -117,30 +117,30 @@ export default defineComponent({
 
 <style lang="sass" scoped>
 .r-bottom-social
-	position: fixed
-	left: 10px
-	bottom: 10px
-	width: 100%
-	div
-		display: flex
-		align-items: center
-		cursor: pointer
-	i
-		font-size: 35px
+    position: fixed
+    left: 10px
+    bottom: 10px
+    width: 100%
+    div
+        display: flex
+        align-items: center
+        cursor: pointer
+    i
+        font-size: 35px
 .r-server-status
-	max-width: 205px
+    max-width: 205px
 .r-server-container
-	background: var(--surface-0)
-	box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 3px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)
-	width: 100%
-	max-width: 400px
-	position: fixed
-	bottom: 10px
-	right: 10px
+    background: var(--surface-0)
+    box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 3px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)
+    width: 100%
+    max-width: 400px
+    position: fixed
+    bottom: 10px
+    right: 10px
 </style>
 <style lang="sass">
 .p-menubar-button
-	display: none !important
+    display: none !important
 .r-settings-overlay
-	min-width: 240px
+    min-width: 240px
 </style>

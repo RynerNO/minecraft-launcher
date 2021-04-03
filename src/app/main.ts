@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, Tray } from 'electron';
 import * as path from 'path';
 import { Client } from 'minecraft-launcher-core';
 import { existsSync, promises } from 'fs';
@@ -8,6 +8,7 @@ import { autoUpdater, NsisUpdater } from 'electron-updater';
 import { App as config } from './config/index';
 import Debug from 'debug';
 import { Client as McProtoClient, PacketWriter, State } from 'mcproto';
+
 dotenv.config();
 
 export const log = Debug('App');
@@ -49,7 +50,10 @@ app.on('ready', () => {
 	autoUpdater.autoDownload = true;
 	autoUpdater.checkForUpdates();
 	autoUpdater.on('update-downloaded', () => {
-		autoUpdater.quitAndInstall(true, true);
+		mainWindow.webContents.send('updateAvaliable');
+		ipcMain.on('update', () => {
+			autoUpdater.quitAndInstall(true, true);
+		});
 	});
 
 	app.on('activate', function () {
@@ -98,7 +102,7 @@ ipcMain.on(
 		}
 	) => {
 		log('Launch Game Event');
-		const isEmpty = await isDirEmpty(path.join(path.dirname(app.getPath('exe')), 'resources', 'minecraft'));
+		const isEmpty = await isDirEmpty(path.join(path.dirname(app.getPath('userData')), 'ioe', 'minecraft'));
 		log(isEmpty);
 		if (isEmpty) {
 			downloadGame();
@@ -110,8 +114,13 @@ ipcMain.on(
 					name: profile.name,
 					uuid: profile.uuid,
 				},
-				javaPath: path.resolve(path.dirname(app.getPath('exe')), 'resources', 'minecraft', 'jdk-win64/bin/java.exe'),
-				root: path.resolve(path.dirname(app.getPath('exe')), 'resources', 'minecraft'),
+				javaPath: path.resolve(
+					path.dirname(app.getPath('userData')),
+					'ioe',
+					'minecraft',
+					'jdk-win64/bin/java.exe'
+				),
+				root: path.resolve(path.dirname(app.getPath('userData')), 'ioe', 'minecraft'),
 				version: {
 					type: 'release',
 					number: '1.16.5',
@@ -133,16 +142,23 @@ ipcMain.on(
 		}
 	}
 );
-
+console.log(path.join(path.dirname(app.getPath('userData')), 'ioe', 'minecraft'));
 async function checkServerStatus() {
 	try {
 		const client = await McProtoClient.connect(config.SERVER_HOST, config.SERVER_PORT);
-		client.send(new PacketWriter(0x0).writeVarInt(404).writeString(config.SERVER_HOST).writeUInt16(config.SERVER_PORT).writeVarInt(State.Status));
+		client.send(
+			new PacketWriter(0x0)
+				.writeVarInt(404)
+				.writeString(config.SERVER_HOST)
+				.writeUInt16(config.SERVER_PORT)
+				.writeVarInt(State.Status)
+		);
 
 		client.send(new PacketWriter(0x0));
 		const response = await client.nextPacket(0x0);
 
-		if (mainWindow !== undefined) mainWindow.webContents.send('serverStatus', { ...response.readJSON(), name: config.SERVER_NAME });
+		if (mainWindow !== undefined)
+			mainWindow.webContents.send('serverStatus', { ...response.readJSON(), name: config.SERVER_NAME });
 		client.end();
 	} catch (e) {
 		if (mainWindow !== undefined) mainWindow.webContents.send('serverStatus', false);

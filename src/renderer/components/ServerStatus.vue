@@ -2,7 +2,7 @@
 div.r-status-container
     div(class="p-d-flex p-ai-center p-jc-center")
         img(:src="favicon")
-        p(class="p-text-center p-ml-3") {{ name }}
+        p(class="p-text-center p-ml-3 r-server-name") {{ name }}
     p(class="p-d-flex p-ai-center ") Status: 
         i(class="pi pi-circle-on p-ml-4 r-status-icon" :style="{'color': (online) ? '#00cc6e' : '#848484'}")
         span(class="p-ml-1" :style="{'color': (online) ? '#00cc6e' : '#848484'}") {{ (online ) ? "Online" : "Offline"}}
@@ -62,12 +62,11 @@ export default defineComponent({
 .r-status-icon
     font-size: 9px
 .r-status-container
-    // background: var(--surface-0)
     padding: 15px
     width: 100%
     border-radius: 5px
-    // box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 3px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)
-
+.r-server-name
+    word-break: break-all
 input
     font-size: 24px
 </style>

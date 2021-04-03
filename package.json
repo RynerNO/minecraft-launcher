@@ -1,6 +1,6 @@
 {
   "name": "minecraft-launcher",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "scripts": {
     "app:watch": "tsc -w -p ./src/app/tsconfig.json",
     "view:watch": "webpack serve",
@@ -16,9 +16,9 @@
   "build": {
     "artifactName": "${productName}-${version}.${ext}",
     "extraResources": [
-      "**/extra/7za.exe"
+      "**/build/7za.exe"
     ],
-    "buildVersion": "1.0.0",
+    "buildVersion": "2.0.0",
     "directories": {
       "output": "package"
     },
