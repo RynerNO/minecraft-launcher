@@ -5,7 +5,7 @@ import { existsSync, promises } from 'fs';
 import { downloadGame } from './scripts/download';
 import dotenv from 'dotenv';
 import { autoUpdater, NsisUpdater } from 'electron-updater';
-
+import { App as config } from './config';
 import Debug from 'debug';
 import { Client as McProtoClient, PacketWriter, State } from 'mcproto';
 dotenv.config();
@@ -93,18 +93,9 @@ ipcMain.on(
 	async (
 		event,
 		profile: {
-			id: string;
+			uuid: string;
 			name: string;
-			selectedProfile: {
-				id: string;
-				name: string;
-				legacy: boolean;
-			};
-			userProperties: {};
-			token: string;
 			accessToken: string;
-			clientToken: string;
-			avaliableProfiles: {};
 			status: boolean;
 			ramUsage: number;
 		}
@@ -120,7 +111,7 @@ ipcMain.on(
 				authorization: {
 					access_token: profile.accessToken,
 					name: profile.name,
-					uuid: profile.id,
+					uuid: profile.uuid,
 				},
 				javaPath: path.resolve(path.dirname(app.getPath('exe')), 'resources', 'minecraft', 'jdk-win64/bin/java.exe'),
 				root: path.resolve(path.dirname(app.getPath('exe')), 'resources', 'minecraft'),
@@ -148,17 +139,15 @@ ipcMain.on(
 
 async function checkServerStatus() {
 	try {
-		const host = '95.181.153.112',
-			port = 25565;
-		const client = await McProtoClient.connect(host, port);
-		client.send(new PacketWriter(0x0).writeVarInt(404).writeString(host).writeUInt16(port).writeVarInt(State.Status));
+		const client = await McProtoClient.connect(config.SERVER_HOST, config.SERVER_PORT);
+		client.send(new PacketWriter(0x0).writeVarInt(404).writeString(config.SERVER_HOST).writeUInt16(config.SERVER_PORT).writeVarInt(State.Status));
 
 		client.send(new PacketWriter(0x0));
 		const response = await client.nextPacket(0x0);
 		mainWindow.webContents.send('serverStatus', response.readJSON());
 		client.end();
 	} catch (e) {
-		mainWindow.webContents.send('serverStatus', false);
+		if (mainWindow !== undefined) mainWindow.webContents.send('serverStatus', false);
 	}
 }
 // {

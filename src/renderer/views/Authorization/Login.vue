@@ -18,77 +18,75 @@ div.p-col-12.p-d-flex.p-ai-center.p-flex-column.p-jc-center.r-container
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { useStore } from 'vuex'
-import InputText from 'primevue/inputtext'
-import Button from 'primevue/button'
-import InlineMessage from 'primevue/inlinemessage'
+import { defineComponent, ref } from 'vue';
+import { useStore } from 'vuex';
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
+import InlineMessage from 'primevue/inlinemessage';
 import isEmail from 'validator/es/lib/isEmail';
 import isEmpty from 'validator/es/lib/isEmpty';
 import isLength from 'validator/es/lib/isLength';
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	name: 'Home',
 	components: {
-	 InputText,
-	 Button,
-	 InlineMessage
+		InputText,
+		Button,
+		InlineMessage,
 	},
 	setup() {
-		const store = useStore()
-		const router = useRouter()
+		const store = useStore();
+		const router = useRouter();
 		const submitForm = () => {
-			if(formData.value.invalid) return;
-			const {email, password} = formData.value
-			store.dispatch('login', {email: email.value, password: password.value}).then(() => {
-				router.push('/')
-			})
-		}
+			if (formData.value.invalid) return;
+			const { email, password } = formData.value;
+			store.dispatch('login', { email: email.value, password: password.value }).then(() => {
+				router.push('/');
+			});
+		};
 		const formData = ref({
 			invalid: true,
 			email: {
 				invalid: false,
-				value: ""
+				value: '',
 			},
 			password: {
 				invalid: false,
-				value: ""
+				value: '',
 			},
-		})
+		});
 		const validateEmail = (e: InputEvent) => {
 			const input = <HTMLInputElement>e.target;
 			formData.value.email.invalid = !isEmail(input.value);
 			validateForm();
-		}
-	
+		};
+
 		const validatePassword = (e: InputEvent) => {
-			const input = <HTMLInputElement>e.target
-			formData.value.password.invalid = isEmpty(input.value) || !isLength(input.value, {
-				min: 8
-			});
+			const input = <HTMLInputElement>e.target;
+			formData.value.password.invalid =
+				isEmpty(input.value) ||
+				!isLength(input.value, {
+					min: 8,
+				});
 			validateForm();
-		}
+		};
 		const validateForm = () => {
-			if( formData.value.email.invalid 
-			|| formData.value.password.invalid ) formData.value.invalid = true;
+			if (formData.value.email.invalid || formData.value.password.invalid) formData.value.invalid = true;
 			else formData.value.invalid = false;
-		}
+		};
 		const Test = () => {
-			console.log(store.state.auth)
-		}
+			console.log(store.state.auth);
+		};
 		return {
 			submitForm,
 			validateEmail,
 			validatePassword,
 			formData,
-			Test
-		}
-	}
-   
-	   
-	 
-})
+			Test,
+		};
+	},
+});
 </script>
 
 <style lang="sass" scoped>

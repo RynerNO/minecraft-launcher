@@ -1,25 +1,24 @@
-import {createRouter, createMemoryHistory } from 'vue-router';
-import Home from "../views/Home.vue";
+import { createRouter, createWebHashHistory } from 'vue-router';
 
 const routes = [
-    {
-        path: '/',
-        component: Home,
-        name: 'home'
-    },
-    {
-        path: '/register',
-        component: import("../views/Authorization/Register.vue"),
-        name: 'register'
-    },
-    {
-        path: '/login',
-        component: import("../views/Authorization/Login.vue"),
-        name: 'login'
-    }
+	{
+		path: '/',
+		component: () => import('../views/Home.vue'),
+		name: 'home',
+	},
+	{
+		path: '/register',
+		component: () => import('../views/Authorization/Register.vue'),
+		name: 'register',
+	},
+	{
+		path: '/login',
+		component: () => import('../views/Authorization/Login.vue'),
+		name: 'login',
+	},
 ];
 
 export const router = createRouter({
-    history: createMemoryHistory('/'),
-    routes
+	history: createWebHashHistory('/'),
+	routes,
 });

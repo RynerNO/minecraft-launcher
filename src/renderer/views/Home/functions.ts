@@ -2,8 +2,7 @@ import { router } from '../../router';
 import { store } from '../../store';
 import { ipcRenderer } from 'types';
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { useStore } from 'vuex';
+
 const ipc: ipcRenderer = <ipcRenderer>window.ipcRenderer;
 
 const status = ref({

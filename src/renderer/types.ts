@@ -17,19 +17,9 @@ export interface Window {
 }
 
 export interface authResponse {
-	id: string;
+	uuid: string;
 	name: string;
-	selectedProfile: {
-		id: string;
-		name: string;
-		legacy: boolean;
-	};
-	userProperties: {};
-	token: string;
 	accessToken: string;
-	clientToken: string;
-	avaliableProfiles: {};
-	status: boolean;
 }
 
 export interface ipcRenderer {

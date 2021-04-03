@@ -8,19 +8,9 @@ import { authResponse, loginData, registerData } from '../types';
 export type State = typeof initialState;
 const initialState = {
 	auth: {
-		id: '',
+		uuid: '',
 		name: '',
-		selectedProfile: {
-			id: '',
-			name: '',
-			legacy: false,
-		},
-		userProperties: {},
-		token: '',
 		accessToken: '',
-		clientToken: '',
-		avaliableProfiles: {},
-		status: false,
 	},
 	settings: {
 		ramUsage: 5120,
@@ -30,7 +20,6 @@ const initialState = {
 const mutations = {
 	setAuth(state: State, payload: authResponse) {
 		state.auth = payload;
-		state.auth.status = true;
 	},
 	unsetAuth(state: State) {
 		state.auth = initialState.auth;
@@ -62,6 +51,26 @@ const actions = {
 					resolve(response.data);
 				})
 				.catch((e) => {
+					reject(e);
+				});
+		});
+	},
+	verify({ commit }: { commit: Commit }, payload: { accessToken: string }) {
+		return new Promise((resolve, reject) => {
+			axios()
+				.post('/verify', payload)
+				.then((response) => {
+					if (response.status !== 200) {
+						commit('unsetAuth');
+						return reject();
+					}
+					commit('setAuth', response.data);
+					resolve(response.data);
+				})
+				.catch((e) => {
+					if (e.message == 'Request failed with status code 401' || e.message == 'Request failed with status code 400') {
+						commit('unsetAuth');
+					}
 					reject(e);
 				});
 		});
