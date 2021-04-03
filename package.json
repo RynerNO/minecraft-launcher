@@ -100,6 +100,7 @@
     "electron-updater": "^4.3.8",
     "mcproto": "^0.9.0",
     "minecraft-launcher-core": "RynerNO/MinecraftLauncher-core",
-    "node-7z": "^2.1.2"
+    "node-7z": "^2.1.2",
+    "open": "^8.0.4"
   }
 }

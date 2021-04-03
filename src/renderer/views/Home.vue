@@ -17,8 +17,7 @@ div
                 p Память: {{ ramSlider }}MB
                 Slider( :step="1024" :min="2048" :max="8192" v-model="ramSlider" @slideend="changeRamUsage")
             Button( label="Выйти" icon="pi pi-fw pi-power-off" class="p-button-raised p-ml-3 p-button-danger p-button-text p-pl-4 p-pr-4" @click="logout")
-    
-    div(class="r-bottom-container p-d-flex p-jc-between p-ai-end")
+    div(class="r-server-list p-d-flex p-mt-auto p-ml-auto")
         div(class="r-server-container p-d-flex p-jc-evenly p-ai-center")
             ServerStatus(v-bind="serverStatus" class="r-server-status" )
             div(class="p-d-flex p-ai-center p-jc-center p-flex-column r-launch-container")
@@ -32,9 +31,10 @@ div
             :disabled="!readyToLaunch"  
             @click.prevent="launchGame"
             )
-        div
-            i(class="pi pi-discord")
-            span discord.gg/12312312
+    div(class="r-bottom-social")
+            div(@click.prevent="openInBrowser('https://discord.gg/mNvhZtm')")
+                i(class="pi pi-discord ")
+                span(class="p-ml-2") Join Discord
 </template>
 
 <script lang="ts">
@@ -42,7 +42,7 @@ import { defineComponent, inject, ref } from 'vue';
 import { useStore } from 'vuex';
 import { ipcRenderer } from '../types';
 
-import { getServerStatus, logout, launchGame, changeRamUsage } from './Home/functions';
+import { getServerStatus, logout, launchGame, changeRamUsage, openInBrowser } from './Home/functions';
 
 import ProgressBar from 'primevue/progressbar';
 import Button from 'primevue/button';
@@ -109,28 +109,38 @@ export default defineComponent({
 			settingsOverlay,
 			ramSlider,
 			changeRamUsage,
+			openInBrowser,
 		};
 	},
 });
 </script>
 
 <style lang="sass" scoped>
-.r-bottom-container
-    position: fixed
-    left: 10px
-    bottom: 10px
-    width: 100%
+.r-bottom-social
+	position: fixed
+	left: 10px
+	bottom: 10px
+	width: 100%
+	div
+		display: flex
+		align-items: center
+		cursor: pointer
+	i
+		font-size: 35px
 .r-server-status
-    max-width: 205px
+	max-width: 205px
 .r-server-container
-    background: var(--surface-0)
-    box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 3px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)
-    width: 100%
-    max-width: 400px
+	background: var(--surface-0)
+	box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 3px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)
+	width: 100%
+	max-width: 400px
+	position: fixed
+	bottom: 10px
+	right: 10px
 </style>
 <style lang="sass">
 .p-menubar-button
-    display: none !important
+	display: none !important
 .r-settings-overlay
-    min-width: 240px
+	min-width: 240px
 </style>

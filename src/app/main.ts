@@ -14,18 +14,15 @@ export const log = Debug('App');
 Debug.enable('App');
 export let mainWindow: BrowserWindow | undefined;
 
-const updater = new NsisUpdater({
-	provider: 'github',
-});
-
 function createWindow() {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
 		backgroundColor: '#2a323d',
 		minWidth: 600,
 		minHeight: 600,
-		height: 600,
-		width: 900,
+		width: 650,
+		height: 500,
+		frame: false,
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 			nodeIntegration: false, // add this
@@ -151,6 +148,14 @@ async function checkServerStatus() {
 		if (mainWindow !== undefined) mainWindow.webContents.send('serverStatus', false);
 	}
 }
+
+ipcMain.on('close', () => {
+	app.exit();
+});
+
+ipcMain.on('minimize', () => {
+	mainWindow.minimize();
+});
 // {
 //   [2]   description: { text: 'PvP/PvE Server based on Valhelsia modpack' },
 //   [2]   players: { max: 20, online: 0 },
@@ -162,3 +167,5 @@ async function checkServerStatus() {
 //   [2]     fmlNetworkVersion: 2
 //   [2]   }
 //   [2] }
+
+export default app;

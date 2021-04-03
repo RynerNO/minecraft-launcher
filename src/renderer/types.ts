@@ -32,6 +32,9 @@ declare global {
 		config: {
 			AUTH_URL: string;
 		};
+		nodeOpen: (target: string) => void;
 		ipcRenderer: ipcRenderer;
+		hide: () => void;
+		close: () => void;
 	}
 }

@@ -1,16 +1,37 @@
 <template lang="pug">
-router-view 
+div
+	div.r-menubar
+		div.r-menubar-drag
+		div.r-menubar-start
+			div(class="p-d-flex p-ai-center p-p-1")
+				img(alt="logo" :src="Logo" height="25" class="p-mr-2")
+				span(class="r-app-title") Launcher
+		div.r-menubar-end
+			Button(icon="pi pi-minus" class="p-button-text  r-button-no-outline p-button-sm" @click="minimize")
+			Button(icon="pi pi-times" class="p-button-text p-button-danger r-button-no-outline p-button-sm" @click="close")
+	router-view 
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+
+//@ts-ignore
+import Logo from './assets/logo.png';
+
+import Button from 'primevue/button';
+import Menubar from 'primevue/menubar';
 export default defineComponent({
 	name: 'App',
+	components: {
+		Menubar,
+		Button,
+	},
 	setup() {
 		const store = useStore();
 		const router = useRouter();
+		const ipc = window.ipcRenderer;
 		onMounted(() => {
 			store
 				.dispatch('verify', { accessToken: store.state.auth.accessToken })
@@ -21,17 +42,50 @@ export default defineComponent({
 					router.push('login');
 				});
 		});
+
+		const close = () => {
+			ipc.send('close');
+		};
+		const minimize = () => {
+			ipc.send('minimize');
+		};
+		return {
+			Logo,
+			close,
+			minimize,
+		};
 	},
 });
 </script>
 
 
 <style lang="sass">
+.r-button-no-outline:focus
+	box-shadow: unset !important
+.r-menubar
+	width: 100%
+	display: flex
+	background: var(--surface-0)
+
+	position: relative
+	button
+		cursor: pointer
+.r-menubar-drag
+	position: absolute
+	width: calc(100% - 76px)
+	-webkit-app-region: drag
+	pointer-events: none
+	height: 100%
+.r-menubar-start
+	margin-right: auto
+.r-menubar-end
+	margin-left: auto
+.r-app-title
+	font-size: 13px
 body
 	background-color: var(--surface-e)
 	margin: 0
-	overflow-x: hidden
-	overflow-y: auto
+	overflow: hidden
 	background-color: var(--surface-e)
 	font-family: var(--font-family)
 	font-weight: 400
@@ -40,7 +94,8 @@ body
 	-moz-osx-font-smoothing: grayscale
 
 .r-container
-	height: 100vh
+
+	height: calc(100vh - 32px)
 
 .r-field-container
 	position: relative

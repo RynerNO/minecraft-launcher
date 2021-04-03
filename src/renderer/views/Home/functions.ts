@@ -3,7 +3,7 @@ import { store } from '../../store';
 import { ipcRenderer } from 'types';
 import { ref } from 'vue';
 
-const ipc: ipcRenderer = <ipcRenderer>window.ipcRenderer;
+const ipc = window.ipcRenderer;
 
 const status = ref({
 	online: false,
@@ -56,4 +56,8 @@ export const launchGame = () => {
 export const changeRamUsage = (e: { value: number }) => {
 	console.log(e);
 	store.commit('changeRamUsage', e.value);
+};
+
+export const openInBrowser = (url: string) => {
+	window.nodeOpen(url);
 };
