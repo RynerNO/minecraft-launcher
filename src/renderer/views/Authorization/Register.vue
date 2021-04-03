@@ -1,5 +1,5 @@
 <template lang="pug">
-div.p-col-12.p-d-flex.p-ai-center.p-flex-column.p-jc-center.r-container
+div.p-col-12.p-d-flex.p-ai-center.p-flex-column.p-jc-center.r-container(@keyup.enter="submitForm")
 	p(class="r-field-error" v-if="registerFailed.status") {{ registerFailed.message }}
 	div(class="r-field-container").p-inputgroup
 		span(class="p-inputgroup-addon")
