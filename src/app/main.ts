@@ -5,7 +5,7 @@ import { existsSync, promises } from 'fs';
 import { downloadGame } from './scripts/download';
 import dotenv from 'dotenv';
 import { autoUpdater, NsisUpdater } from 'electron-updater';
-import { App as config } from './config';
+import { App as config } from './config/index';
 import Debug from 'debug';
 import { Client as McProtoClient, PacketWriter, State } from 'mcproto';
 dotenv.config();
