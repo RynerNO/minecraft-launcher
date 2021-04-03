@@ -11,14 +11,16 @@ export default defineComponent({
 	setup() {
 		const store = useStore();
 		const router = useRouter();
-		store
-			.dispatch('verify', { accessToken: store.state.auth.accessToken })
-			.then(() => {
-				router.push('/');
-			})
-			.catch((e: any) => {
-				router.push('login');
-			});
+		onMounted(() => {
+			store
+				.dispatch('verify', { accessToken: store.state.auth.accessToken })
+				.then(() => {
+					router.push('/');
+				})
+				.catch((e: any) => {
+					router.push('login');
+				});
+		});
 	},
 });
 </script>

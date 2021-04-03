@@ -17,18 +17,24 @@ div
                 p Память: {{ ramSlider }}MB
                 Slider( :step="1024" :min="2048" :max="8192" v-model="ramSlider" @slideend="changeRamUsage")
             Button( label="Выйти" icon="pi pi-fw pi-power-off" class="p-button-raised p-ml-3 p-button-danger p-button-text p-pl-4 p-pr-4" @click="logout")
-    div(class="p-d-flex p-ai-center p-jc-center p-flex-column r-container")
-        div.launchStatus(v-if="showLaunchStatus")
-            p {{ launchStatus }}
-            ProgressBar(:value="launchProgress" v-if="launchProgress > 0") 
-        Button(
-        label="Играть" 
-        :icon="(!readyToLaunch) ? 'pi pi-spin pi-spinner': ''" 
-        class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3" 
-        :disabled="!readyToLaunch"  
-        @click.prevent="launchGame"
-        )
-    ServerStatus(v-bind="serverStatus" class="r-server-status")
+    
+    div(class="r-bottom-container p-d-flex p-jc-between p-ai-end")
+        div(class="r-server-container p-d-flex p-jc-evenly p-ai-center")
+            ServerStatus(v-bind="serverStatus" class="r-server-status" )
+            div(class="p-d-flex p-ai-center p-jc-center p-flex-column r-launch-container")
+            div.launchStatus(v-if="showLaunchStatus")
+                    p {{ launchStatus }}
+                    ProgressBar(:value="launchProgress" v-if="launchProgress > 0") 
+            Button(
+            label="Играть" 
+            :icon="(!readyToLaunch) ? 'pi pi-spin pi-spinner': ''" 
+            class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3 p-button-lg" 
+            :disabled="!readyToLaunch"  
+            @click.prevent="launchGame"
+            )
+        div
+            i(class="pi pi-discord")
+            span discord.gg/12312312
 </template>
 
 <script lang="ts">
@@ -109,12 +115,18 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-.r-server-status
+.r-bottom-container
     position: fixed
     left: 10px
     bottom: 10px
-    max-width: 300px
     width: 100%
+.r-server-status
+    max-width: 205px
+.r-server-container
+    background: var(--surface-0)
+    box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%), 0 3px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%)
+    width: 100%
+    max-width: 400px
 </style>
 <style lang="sass">
 .p-menubar-button

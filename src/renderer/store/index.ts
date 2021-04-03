@@ -60,10 +60,6 @@ const actions = {
 			axios()
 				.post('/verify', payload)
 				.then((response) => {
-					if (response.status !== 200) {
-						commit('unsetAuth');
-						return reject();
-					}
 					commit('setAuth', response.data);
 					resolve(response.data);
 				})

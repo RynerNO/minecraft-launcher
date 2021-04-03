@@ -144,7 +144,8 @@ async function checkServerStatus() {
 
 		client.send(new PacketWriter(0x0));
 		const response = await client.nextPacket(0x0);
-		mainWindow.webContents.send('serverStatus', response.readJSON());
+
+		if (mainWindow !== undefined) mainWindow.webContents.send('serverStatus', { ...response.readJSON(), name: config.SERVER_NAME });
 		client.end();
 	} catch (e) {
 		if (mainWindow !== undefined) mainWindow.webContents.send('serverStatus', false);

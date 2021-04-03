@@ -11,6 +11,7 @@ const status = ref({
 	maxPlayers: 0,
 	favicon: '',
 	fillPercent: 0,
+	name: '',
 });
 interface serverStatus {
 	description: {
@@ -21,6 +22,7 @@ interface serverStatus {
 		online: number;
 	};
 	favicon: string;
+	name: string;
 }
 
 ipc.receive('serverStatus', (serverStatus: serverStatus | false) => {
@@ -33,6 +35,7 @@ ipc.receive('serverStatus', (serverStatus: serverStatus | false) => {
 			maxPlayers: serverStatus.players.max,
 			favicon: serverStatus.favicon,
 			fillPercent: (serverStatus.players.online / serverStatus.players.max) * 100,
+			name: serverStatus.name,
 		};
 	}
 });

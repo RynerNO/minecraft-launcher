@@ -5,9 +5,9 @@
   ],
   "plugins": [
     ["module-resolver", {
-      "root": ["./src"],
+      "root": ["./"],
       "alias": {
-        "@components": "./src/components",
+        "@config": "./config",
         "@": ""
       }
     }]
