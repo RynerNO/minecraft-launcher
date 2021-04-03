@@ -1,5 +1,6 @@
 <template lang="pug">
 div.p-col-12.p-d-flex.p-ai-center.p-flex-column.p-jc-center.r-container
+	p(class="r-field-error" v-if="registerFailed.status") {{ registerFailed.message }}
 	div(class="r-field-container").p-inputgroup
 		span(class="p-inputgroup-addon")
 			i(class="pi pi-envelope")
@@ -24,89 +25,102 @@ div.p-col-12.p-d-flex.p-ai-center.p-flex-column.p-jc-center.r-container
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { useStore } from 'vuex'
-import InputText from 'primevue/inputtext'
-import Button from 'primevue/button'
-import InlineMessage from 'primevue/inlinemessage'
+import { defineComponent, ref } from 'vue';
+import { useStore } from 'vuex';
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
+import InlineMessage from 'primevue/inlinemessage';
 import isEmail from 'validator/es/lib/isEmail';
 import isEmpty from 'validator/es/lib/isEmpty';
 import isLength from 'validator/es/lib/isLength';
 import isAlphanumeric from 'validator/es/lib/isAlphanumeric';
-import { useRouter } from 'vue-router'
-
+import { useRouter } from 'vue-router';
+import { ErrorResponse } from '../../types';
 
 export default defineComponent({
-	name: 'Home',
+	name: 'Register',
 	components: {
-	 InputText,
-	 Button,
-	 InlineMessage
+		InputText,
+		Button,
+		InlineMessage,
 	},
 	setup() {
-		const store = useStore()
-		const router = useRouter()
+		const store = useStore();
+		const router = useRouter();
+		const registerFailed = ref({
+			status: false,
+			message: '',
+		});
 		const submitForm = () => {
-			if(formData.value.invalid) return;
-			const {email, name, password} = formData.value;
-			store.dispatch('register', {email: email.value, name: name.value, password: password.value}).then(() => {
-				router.push('/')
-			})
-		}
+			if (formData.value.invalid) return;
+			const { email, name, password } = formData.value;
+			store
+				.dispatch('register', { email: email.value, name: name.value, password: password.value })
+				.then((data: ErrorResponse | undefined) => {
+					if (data === undefined) return router.push('/');
+					if (data.status === 'Error') {
+						registerFailed.value.status = true;
+						registerFailed.value.message = data.message;
+					}
+				});
+		};
 		const formData = ref({
 			invalid: true,
 			email: {
 				invalid: false,
-				value: ""
+				value: '',
 			},
 			name: {
 				invalid: false,
-				value: ""
+				value: '',
 			},
 			password: {
 				invalid: false,
-				value: ""
+				value: '',
 			},
-		})
+		});
 		const validateEmail = (e: InputEvent) => {
 			const input = <HTMLInputElement>e.target;
 			formData.value.email.invalid = !isEmail(input.value);
 			validateForm();
-		}
+		};
 		const validateName = (e: InputEvent) => {
 			const input = <HTMLInputElement>e.target;
-			formData.value.name.invalid = isEmpty(input.value) || !isLength(input.value, {
-				min: 3,
-				max: 13
-			}) || !isAlphanumeric(input.value, "en-US");
+			formData.value.name.invalid =
+				isEmpty(input.value) ||
+				!isLength(input.value, {
+					min: 3,
+					max: 13,
+				}) ||
+				!isAlphanumeric(input.value, 'en-US');
 			validateForm();
-		}
+		};
 		const validatePassword = (e: InputEvent) => {
-			const input = <HTMLInputElement>e.target
-			formData.value.password.invalid = isEmpty(input.value) || !isLength(input.value, {
-				min: 8
-			});
+			const input = <HTMLInputElement>e.target;
+			formData.value.password.invalid =
+				isEmpty(input.value) ||
+				!isLength(input.value, {
+					min: 8,
+				});
 			validateForm();
-		}
+		};
 		const validateForm = () => {
-			if( formData.value.email.invalid 
-			|| formData.value.name.invalid 
-			|| formData.value.password.invalid ) formData.value.invalid = true;
+			registerFailed.value.status = false;
+			if (formData.value.email.invalid || formData.value.name.invalid || formData.value.password.invalid)
+				formData.value.invalid = true;
 			else formData.value.invalid = false;
-		}
-		
+		};
+
 		return {
 			submitForm,
 			validateEmail,
 			validateName,
 			validatePassword,
-			formData
-		}
-	}
-   
-	   
-	 
-})
+			formData,
+			registerFailed,
+		};
+	},
+});
 </script>
 
 <style lang="sass" scoped>

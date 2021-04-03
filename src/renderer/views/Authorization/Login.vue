@@ -1,5 +1,6 @@
 <template lang="pug">
 div.p-col-12.p-d-flex.p-ai-center.p-flex-column.p-jc-center.r-container
+	p(class="r-field-error" v-if="loginFailed.status") {{ loginFailed.message }}
 	div(class="r-field-container").p-inputgroup
 		span(class="p-inputgroup-addon")
 			i(class="pi pi-envelope")
@@ -12,7 +13,14 @@ div.p-col-12.p-d-flex.p-ai-center.p-flex-column.p-jc-center.r-container
 			i(class="pi pi-lock")
 		InputText(placeholder="Пароль" type="password" @blur="validatePassword" v-model="formData.password.value" :class="{'p-invalid' : formData.password.invalid}")
 	p(class="r-field-error" v-if="formData.password.invalid") Пароль должен содержать не менее восьми знаков
-	Button(label="Войти" class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3" icon="pi pi-chevron-right" iconPos="right" :disabled="formData.invalid" @click.prevent="submitForm")
+	Button(
+	label="Войти" 
+	class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3" icon="pi pi-chevron-right" 
+	iconPos="right" 
+	:disabled="formData.invalid" 
+	@click.prevent="submitForm"
+	@keyup.enter ="submitForm"	
+	)
 	p(class="p-mt-3") Нет аккаунта? 
 		router-link(to="register") Регистрация
 </template>
@@ -27,9 +35,10 @@ import isEmail from 'validator/es/lib/isEmail';
 import isEmpty from 'validator/es/lib/isEmpty';
 import isLength from 'validator/es/lib/isLength';
 import { useRouter } from 'vue-router';
+import { ErrorResponse } from '../../types';
 
 export default defineComponent({
-	name: 'Home',
+	name: 'Login',
 	components: {
 		InputText,
 		Button,
@@ -38,12 +47,22 @@ export default defineComponent({
 	setup() {
 		const store = useStore();
 		const router = useRouter();
+		const loginFailed = ref({
+			status: false,
+			message: '',
+		});
 		const submitForm = () => {
 			if (formData.value.invalid) return;
 			const { email, password } = formData.value;
-			store.dispatch('login', { email: email.value, password: password.value }).then(() => {
-				router.push('/');
-			});
+			store
+				.dispatch('login', { email: email.value, password: password.value })
+				.then((data: ErrorResponse | undefined) => {
+					if (data === undefined) return router.push('/');
+					if (data.status === 'Error') {
+						loginFailed.value.status = true;
+						loginFailed.value.message = data.message;
+					}
+				});
 		};
 		const formData = ref({
 			invalid: true,
@@ -75,15 +94,13 @@ export default defineComponent({
 			if (formData.value.email.invalid || formData.value.password.invalid) formData.value.invalid = true;
 			else formData.value.invalid = false;
 		};
-		const Test = () => {
-			console.log(store.state.auth);
-		};
+
 		return {
 			submitForm,
 			validateEmail,
 			validatePassword,
 			formData,
-			Test,
+			loginFailed,
 		};
 	},
 });

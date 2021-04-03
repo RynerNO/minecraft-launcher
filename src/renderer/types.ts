@@ -27,6 +27,11 @@ export interface ipcRenderer {
 	receive: (channel: string, func: Function) => void;
 }
 
+export interface ErrorResponse {
+	status: string;
+	message: string;
+}
+
 declare global {
 	interface Window {
 		config: {

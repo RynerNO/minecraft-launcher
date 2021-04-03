@@ -34,8 +34,11 @@ const actions = {
 			axios()
 				.post('/login', payload)
 				.then((response) => {
+					if (response.data.status === 'Error') {
+						return resolve(response.data);
+					}
 					commit('setAuth', response.data);
-					resolve(response.data);
+					resolve(undefined);
 				})
 				.catch((e) => {
 					reject(e);
@@ -47,8 +50,11 @@ const actions = {
 			axios()
 				.post('/register', payload)
 				.then((response) => {
+					if (response.data.status === 'Error') {
+						return resolve(response.data);
+					}
 					commit('setAuth', response.data);
-					resolve(response.data);
+					resolve(undefined);
 				})
 				.catch((e) => {
 					reject(e);
@@ -64,9 +70,6 @@ const actions = {
 					resolve(response.data);
 				})
 				.catch((e) => {
-					if (e.message == 'Request failed with status code 401' || e.message == 'Request failed with status code 400') {
-						commit('unsetAuth');
-					}
 					reject(e);
 				});
 		});
