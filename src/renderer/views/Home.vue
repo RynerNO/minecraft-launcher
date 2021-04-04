@@ -14,8 +14,17 @@ div
         template(#end)
             Button( label="Настройки" icon="pi pi-fw pi-cog" class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4" overlay-parent="true" @click="settingsOverlay.toggle($event)")
             OverlayPanel(ref="settingsOverlay" class="r-settings-overlay")
-                p Память: {{ ramSlider }}MB
-                Slider( :step="1024" :min="2048" :max="8192" v-model="ramSlider" @slideend="changeRamUsage")
+                div
+                    p Скин:
+                    FileUpload(name="skin" url="http://95.181.153.73:3001/v1/file/save" @before-send="fileUpload" 
+                    @upload="fileUploadSuccess"
+                    @error="fileUploadError" 
+                    chooseLabel="Выбрать" 
+                    uploadLabel="Загрузить"
+                    cancelLabel="Отменить")
+                div
+                    p Память: {{ ramSlider }}MB
+                    Slider( :step="1024" :min="2048" :max="8192" v-model="ramSlider" @slideend="changeRamUsage")
             Button( label="Выйти" icon="pi pi-fw pi-power-off" class="p-button-raised p-ml-3 p-button-danger p-button-text p-pl-4 p-pr-4" @click="logout")
     div(class="r-server-list p-d-flex p-mt-auto p-ml-auto")
         div(class="r-server-container p-d-flex p-jc-evenly p-ai-center")
@@ -41,6 +50,7 @@ div
 import { defineComponent, inject, ref } from 'vue';
 import { useStore } from 'vuex';
 import { ipcRenderer } from '../types';
+import { v4 as uuidv4 } from 'uuid';
 
 import { getServerStatus, logout, launchGame, changeRamUsage, openInBrowser } from './Home/functions';
 
@@ -51,6 +61,7 @@ import Menubar from 'primevue/menubar';
 import Avatar from 'primevue/avatar';
 import OverlayPanel from 'primevue/overlaypanel';
 import Slider from 'primevue/slider';
+import FileUpload from 'primevue/fileupload';
 export default defineComponent({
 	name: 'Home',
 	components: {
@@ -61,6 +72,7 @@ export default defineComponent({
 		Avatar,
 		OverlayPanel,
 		Slider,
+		FileUpload,
 	},
 	setup() {
 		const store = useStore();
@@ -71,6 +83,24 @@ export default defineComponent({
 		const readyToLaunch = ref(true);
 		const settingsOverlay = ref();
 		const ramSlider = ref(store.state.settings.ramUsage);
+		const flashMessages: any = inject('flashMessages');
+		const fileUploadError = () => {
+			flashMessages.value.push({
+				id: uuidv4(),
+				text: 'Ошибка загрузки скина',
+				type: 'error',
+				closable: true,
+			});
+		};
+		const fileUploadSuccess = () => {
+			flashMessages.value.push({
+				id: uuidv4(),
+				text: 'Скин загружен',
+				type: 'success',
+				closable: true,
+			});
+		};
+
 		ipc.receive('gameDownload', ({ progress }: { progress: number }) => {
 			showLaunchStatus.value = true;
 			readyToLaunch.value = false;
@@ -95,7 +125,9 @@ export default defineComponent({
 			showLaunchStatus.value = false;
 			readyToLaunch.value = false;
 		});
-
+		const fileUpload = (e: { xhr: XMLHttpRequest }) => {
+			e.xhr.setRequestHeader('access-token', store.state.auth.accessToken);
+		};
 		const serverStatus = getServerStatus();
 		return {
 			launchGame,
@@ -110,6 +142,9 @@ export default defineComponent({
 			ramSlider,
 			changeRamUsage,
 			openInBrowser,
+			fileUpload,
+			fileUploadSuccess,
+			fileUploadError,
 		};
 	},
 });

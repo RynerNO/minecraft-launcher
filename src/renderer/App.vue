@@ -14,10 +14,10 @@ div
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, Ref, ref } from 'vue';
+import { defineComponent, onMounted, provide, Ref, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-
+import { v4 as uuidv4 } from 'uuid';
 //@ts-ignore
 import Logo from './assets/logo.png';
 
@@ -36,8 +36,11 @@ export default defineComponent({
 		const router = useRouter();
 		const ipc = window.ipcRenderer;
 		const flashMessages: Ref<any[]> = ref([]);
+
+		provide('flashMessages', flashMessages);
 		ipc.receive('updateAvaliable', () => {
 			flashMessages.value.push({
+				id: uuidv4(),
 				text: 'Доступно обновление',
 				type: 'warning',
 				command: {
