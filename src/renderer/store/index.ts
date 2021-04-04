@@ -66,7 +66,12 @@ const actions = {
 			axios()
 				.post('/verify', payload)
 				.then((response) => {
-					commit('setAuth', response.data);
+					axios()
+						.post('/refresh', payload)
+						.then((response) => {
+							commit('setAuth', response.data);
+						});
+
 					resolve(response.data);
 				})
 				.catch((e) => {
