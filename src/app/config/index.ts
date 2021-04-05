@@ -1,5 +1,6 @@
 export const Renderer = {
 	AUTH_URL: 'https://minecraft-auth-server.herokuapp.com/v1/auth',
+	SKIN_URL: `http://95.181.153.73:3001/v1/file`,
 };
 
 export const App = {

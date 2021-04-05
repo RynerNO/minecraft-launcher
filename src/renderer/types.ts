@@ -1,3 +1,5 @@
+import { Renderer } from '../app/config';
+
 export interface loginData {
 	email: string;
 	password: string;
@@ -34,9 +36,7 @@ export interface ErrorResponse {
 
 declare global {
 	interface Window {
-		config: {
-			AUTH_URL: string;
-		};
+		config: typeof Renderer;
 		nodeOpen: (target: string) => void;
 		ipcRenderer: ipcRenderer;
 		hide: () => void;

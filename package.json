@@ -103,6 +103,7 @@
     "minecraft-launcher-core": "RynerNO/MinecraftLauncher-core",
     "node-7z": "^2.1.2",
     "open": "^8.0.4",
+    "skinview3d": "^2.0.0",
     "uuid": "^8.3.2"
   }
 }

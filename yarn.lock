@@ -8239,6 +8239,19 @@ single-line-log@^1.1.2:
   dependencies:
     string-width "^1.0.1"
 
+skinview-utils@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/skinview-utils/-/skinview-utils-0.6.0.tgz#cc6733a117c1ab847db06411c21073cc2e95b575"
+  integrity sha512-4EPsiKIdKY2yTANDYUPf0TKMP6nDFN9BENZ02zdZO7IYmWnLHuFwoLNAi1Oua+3sc5PQp7l+Vvw22poxk67CWw==
+
+skinview3d@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/skinview3d/-/skinview3d-2.0.0.tgz#9c9a71e8fd52fc1ccd79464d10c283ff2e6b1c24"
+  integrity sha512-4ugu5MBAFAWgS+cNJfDDO4xT+epR8xum0/4uIMWY13vdAK4+Uj91UkFSMWjDbdWi7GalkNkrq7xe9RtTcpHXqg==
+  dependencies:
+    skinview-utils "^0.6.0"
+    three "^0.125.2"
+
 slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
@@ -8733,6 +8746,11 @@ textextensions@^5.11.0:
   version "5.12.0"
   resolved "https://registry.yarnpkg.com/textextensions/-/textextensions-5.12.0.tgz#b908120b5c1bd4bb9eba41423d75b176011ab68a"
   integrity sha512-IYogUDaP65IXboCiPPC0jTLLBzYlhhw2Y4b0a2trPgbHNGGGEfuHE6tds+yDcCf4mpNDaGISFzwSSezcXt+d6w==
+
+three@^0.125.2:
+  version "0.125.2"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.125.2.tgz#dcba12749a2eb41522e15212b919cd3fbf729b12"
+  integrity sha512-7rIRO23jVKWcAPFdW/HREU2NZMGWPBZ4XwEMt0Ak0jwLUKVJhcKM55eCBWyGZq/KiQbeo1IeuAoo/9l2dzhTXA==
 
 throttleit@0.0.2:
   version "0.0.2"

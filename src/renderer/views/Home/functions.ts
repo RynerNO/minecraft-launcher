@@ -2,6 +2,7 @@ import { router } from '../../router';
 import { store } from '../../store';
 import { ipcRenderer } from 'types';
 import { ref } from 'vue';
+import axios from 'axios';
 
 const ipc = window.ipcRenderer;
 
@@ -60,4 +61,10 @@ export const changeRamUsage = (e: { value: number }) => {
 
 export const openInBrowser = (url: string) => {
 	window.nodeOpen(url);
+};
+
+export const removeSkin = () => {};
+
+export const getSkin = () => {
+	const responseData = axios.get(`${window.config.SKIN_URL}/get/`);
 };
