@@ -20,10 +20,10 @@ function createWindow() {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
 		backgroundColor: '#2a323d',
-		minWidth: 600,
-		minHeight: 600,
-		width: 650,
-		height: 500,
+		minWidth: 800,
+		minHeight: 680,
+		width: 800,
+		height: 680,
 		frame: process.env.DEV_ENV === 'true',
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),

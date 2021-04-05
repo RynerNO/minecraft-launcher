@@ -24,8 +24,8 @@ export default defineComponent({
 		onMounted(() => {
 			let skinViewer = new SkinViewer({
 				canvas: skinCanvas.value,
-				width: 300,
-				height: 400,
+				width: 200,
+				height: 200,
 				skin: props.skin,
 			});
 			let control = createOrbitControls(skinViewer);
