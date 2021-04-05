@@ -29,24 +29,16 @@ div(
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, provide } from 'vue';
 import Button from 'primevue/button';
+import { messagesList } from './flashMessage';
 export default defineComponent({
 	name: 'Flash Message',
-	props: {
-		messages: {
-			type: Array,
-			required: false,
-			default: [],
-		},
-	},
 	components: {
 		Button,
 	},
 
 	setup(props) {
-		const messagesList = ref(props.messages);
-
 		const messageClose = (id: string) => {
 			const index = messagesList.value.findIndex((el: any) => {
 				if (el.id === id) return true;

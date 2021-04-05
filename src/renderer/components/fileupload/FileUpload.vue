@@ -48,7 +48,7 @@
 			<FileUploadMessage v-for="msg of messages" severity="error" :key="msg">{{ msg }}</FileUploadMessage>
 			<div class="p-fileupload-files" v-if="hasFiles">
 				<div class="p-fileupload-empty" v-if="$slots.files">
-					<slot name="files" :files="files"></slot>
+					<slot name="files" :files="files" :remove="remove"></slot>
 				</div>
 				<div
 					class="p-fileupload-row"
@@ -438,7 +438,7 @@ export default defineComponent({
 			return [
 				'p-button p-component p-fileupload-choose',
 				{
-					'p-disabled': this.disabled,
+					'p-disabled': this.disabled || this.chooseDisabled,
 					'p-focus': this.focused,
 				},
 			];

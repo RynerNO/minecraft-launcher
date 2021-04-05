@@ -24,8 +24,12 @@ div
 					cancelLabel="Отменить")
 						template(#empty)
 							div(class="p-d-flex p-ai-center")
-								SkinViewer(:skin="skin")
-								Button(icon="pi pi-times" @click="removeSkin")
+								SkinViewer(:skin="skin.img")
+								Button(icon="pi pi-times" @click="removeSkinConfirm" v-if="!skin.default")
+						template(#files="slotProps")
+							div(class="p-d-flex p-ai-center")
+								SkinViewer(:skin="slotProps.files[0].objectURL")
+
 				div
 					p Память: {{ ramSlider }}MB
 					Slider( :step="1024" :min="2048" :max="8192" v-model="ramSlider" @slideend="changeRamUsage")
@@ -50,23 +54,15 @@ div
 			div(@click.prevent="openInBrowser('https://discord.gg/mNvhZtm')")
 				i(class="pi pi-discord ")
 				span(class="p-ml-2") Join Discord
+	ConfirmDialog
 </template>
 
 <script lang="ts">
 import { defineComponent, inject, ref } from 'vue';
 import { useStore } from 'vuex';
 import { ipcRenderer } from '../types';
-import { v4 as uuidv4 } from 'uuid';
 
-import {
-	getServerStatus,
-	logout,
-	launchGame,
-	changeRamUsage,
-	openInBrowser,
-	removeSkin,
-	getSkin,
-} from './Home/functions';
+import { getServerStatus, logout, launchGame, changeRamUsage, openInBrowser, removeSkin, getSkin } from '../methods';
 
 import ProgressBar from 'primevue/progressbar';
 import Button from 'primevue/button';
@@ -77,6 +73,9 @@ import OverlayPanel from 'primevue/overlaypanel';
 import Slider from 'primevue/slider';
 import FileUpload from '../components/fileupload/FileUpload.vue';
 import SkinViewer from '../components/SkinViewer.vue';
+import ConfirmDialog from 'primevue/confirmdialog';
+import { useConfirm } from 'primevue/useconfirm';
+import { sendFlashMessage } from '../components/FlashMessage/flashMessage';
 export default defineComponent({
 	name: 'Home',
 	components: {
@@ -89,6 +88,7 @@ export default defineComponent({
 		Slider,
 		FileUpload,
 		SkinViewer,
+		ConfirmDialog,
 	},
 	setup() {
 		const store = useStore();
@@ -99,24 +99,39 @@ export default defineComponent({
 		const readyToLaunch = ref(true);
 		const settingsOverlay = ref();
 		const ramSlider = ref(store.state.settings.ramUsage);
-		const flashMessages: any = inject('flashMessages');
-		const skin = ref(`http://95.181.153.73:3001/v1/file/get/${store.state.auth.name}`);
+		const skin = getSkin();
+		const confirm = useConfirm();
+		const removeSkinConfirm = () => {
+			confirm.require({
+				message: 'Удалить текущий скин?',
+				header: 'Подтверждение',
+				icon: 'pi pi-exclamation-triangle',
+				acceptLabel: 'Да',
+				rejectLabel: 'Нет',
+				accept: () => {
+					removeSkin();
+				},
+				reject: () => {
+					//callback to execute when user rejects the action
+				},
+			});
+		};
 
 		const fileUploadError = () => {
-			flashMessages.value.push({
-				id: uuidv4(),
+			sendFlashMessage({
 				text: 'Ошибка загрузки скина',
 				type: 'error',
 				closable: true,
 			});
 		};
 		const fileUploadSuccess = () => {
-			flashMessages.value.push({
-				id: uuidv4(),
+			sendFlashMessage({
 				text: 'Скин загружен',
 				type: 'success',
 				closable: true,
 			});
+			settingsOverlay.value.hide();
+			getSkin();
 		};
 
 		ipc.receive('gameDownload', ({ progress }: { progress: number }) => {
@@ -164,6 +179,7 @@ export default defineComponent({
 			fileUploadSuccess,
 			fileUploadError,
 			skin,
+			removeSkinConfirm,
 		};
 	},
 });

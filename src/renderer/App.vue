@@ -9,21 +9,23 @@ div
 		div.r-menubar-end
 			Button(icon="pi pi-minus" class="p-button-text  r-button-no-outline p-button-sm" @click="minimize")
 			Button(icon="pi pi-times" class="p-button-text p-button-danger r-button-no-outline p-button-sm" @click="close")
-	FlashMessage(:messages="flashMessages")
+	FlashMessage()
 	router-view 
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, provide, Ref, ref } from 'vue';
+import { defineComponent, onMounted } from 'vue';
+
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { v4 as uuidv4 } from 'uuid';
+import { sendFlashMessage } from './components/FlashMessage/flashMessage';
+
 //@ts-ignore
 import Logo from './assets/logo.png';
 
 import Button from 'primevue/button';
 import Menubar from 'primevue/menubar';
-import FlashMessage from './components/FlashMessage.vue';
+import FlashMessage from './components/FlashMessage/FlashMessage.vue';
 export default defineComponent({
 	name: 'App',
 	components: {
@@ -35,12 +37,9 @@ export default defineComponent({
 		const store = useStore();
 		const router = useRouter();
 		const ipc = window.ipcRenderer;
-		const flashMessages: Ref<any[]> = ref([]);
 
-		provide('flashMessages', flashMessages);
 		ipc.receive('updateAvaliable', () => {
-			flashMessages.value.push({
-				id: uuidv4(),
+			sendFlashMessage({
 				text: 'Доступно обновление',
 				type: 'warning',
 				command: {
@@ -73,7 +72,6 @@ export default defineComponent({
 			Logo,
 			close,
 			minimize,
-			flashMessages,
 		};
 	},
 });
