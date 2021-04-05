@@ -7,4 +7,5 @@ export const App = {
 	SERVER_NAME: 'IOE',
 	SERVER_HOST: '95.181.153.73',
 	SERVER_PORT: 25565,
+	GITHUB_API: 'https://api.github.com',
 };

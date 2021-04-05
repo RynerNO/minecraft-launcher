@@ -4,7 +4,8 @@ import { log, mainWindow } from '../main';
 import path from 'path';
 import { unzipGame } from './unzip';
 import { app } from 'electron';
-const githubApi = 'https://api.github.com';
+import { App as config } from '../config/index';
+const githubApi = config.GITHUB_API;
 
 export const downloadGame = async () => {
 	log('Starting game gownload');
@@ -46,3 +47,24 @@ async function getDownloadData() {
 	log('Data:', data);
 	return data;
 }
+
+export const downloadAsset = (url: string, name: string, size: number) => {
+	return new Promise((resolve, reject) => {
+		axios.get(url, { responseType: 'stream' }).then((response) => {
+			mkdirSync(path.join(path.dirname(app.getPath('userData')), 'ioe'), { recursive: true });
+			const file = createWriteStream(path.join(path.dirname(app.getPath('userData')), 'ioe', name));
+			response.data.pipe(file);
+
+			const intervalId = setInterval(() => {
+				const progress = Math.round((file.bytesWritten / size) * 100);
+
+				mainWindow.webContents.send('gameDownload', { progress: progress });
+			}, 2000);
+
+			file.on('finish', () => {
+				clearInterval(intervalId);
+				resolve('');
+			});
+		});
+	});
+};

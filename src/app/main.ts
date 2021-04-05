@@ -8,6 +8,7 @@ import { autoUpdater, NsisUpdater } from 'electron-updater';
 import { App as config } from './config/index';
 import Debug from 'debug';
 import { Client as McProtoClient, PacketWriter, State } from 'mcproto';
+import { checkUpdate, updateGame } from './scripts/gameUpdater';
 
 dotenv.config();
 
@@ -107,6 +108,8 @@ ipcMain.on(
 		if (isEmpty) {
 			downloadGame();
 		} else {
+			const updateAvaliable = await checkUpdate();
+			if (updateAvaliable) await updateGame();
 			const launcher = new Client();
 			let opts = {
 				authorization: {
@@ -142,7 +145,6 @@ ipcMain.on(
 		}
 	}
 );
-console.log(path.join(path.dirname(app.getPath('userData')), 'ioe', 'minecraft'));
 async function checkServerStatus() {
 	try {
 		const client = await McProtoClient.connect(config.SERVER_HOST, config.SERVER_PORT);
