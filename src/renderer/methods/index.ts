@@ -2,6 +2,7 @@ import { router } from '../router';
 import { store } from '../store';
 import { ref } from 'vue';
 import axios from 'axios';
+import { sendFlashMessage } from '../components/FlashMessage/flashMessage';
 
 const ipc = window.ipcRenderer;
 
@@ -79,6 +80,11 @@ export const removeSkin = () => {
 			}
 		)
 		.then(() => {
+			sendFlashMessage({
+				text: 'Скин удален.',
+				type: 'success',
+				closable: true,
+			});
 			getSkin();
 		});
 };

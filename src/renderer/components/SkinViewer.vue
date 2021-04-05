@@ -7,8 +7,6 @@ div
 import { defineComponent, onMounted, ref } from 'vue';
 import { SkinViewer, createOrbitControls } from 'skinview3d';
 
-import { useStore } from 'vuex';
-
 import Button from 'primevue/button';
 export default defineComponent({
 	name: 'SkinViewer',
@@ -23,7 +21,6 @@ export default defineComponent({
 	},
 	setup(props) {
 		const skinCanvas = ref();
-		const store = useStore();
 		onMounted(() => {
 			let skinViewer = new SkinViewer({
 				canvas: skinCanvas.value,
@@ -33,7 +30,7 @@ export default defineComponent({
 			});
 			let control = createOrbitControls(skinViewer);
 			control.enableRotate = true;
-			control.enableZoom = false;
+			control.enableZoom = true;
 			control.enablePan = false;
 		});
 		return {
