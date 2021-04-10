@@ -50,7 +50,13 @@ div
 				:disabled="!readyToLaunch"  
 				@click.prevent="launchGame"
 				)
+				Button(
+				label="Открыть папку" 
+				class="p-button-raised  p-button p-button-text p-pl-4 p-pr-4 p-mt-3 p-button-lg" 
+				@click.prevent="openGameFolder"
+				)
 	div(class="r-bottom-social")
+		div
 			div(@click.prevent="openInBrowser('https://discord.gg/mNvhZtm')")
 				i(class="pi pi-discord ")
 				span(class="p-ml-2") Join Discord
@@ -62,7 +68,16 @@ import { defineComponent, inject, ref } from 'vue';
 import { useStore } from 'vuex';
 import { ipcRenderer } from '../types';
 
-import { getServerStatus, logout, launchGame, changeRamUsage, openInBrowser, removeSkin, getSkin } from '../methods';
+import {
+	getServerStatus,
+	logout,
+	launchGame,
+	changeRamUsage,
+	openInBrowser,
+	removeSkin,
+	getSkin,
+	openGameFolder,
+} from '../methods';
 
 import ProgressBar from 'primevue/progressbar';
 import Button from 'primevue/button';
@@ -180,6 +195,7 @@ export default defineComponent({
 			fileUploadError,
 			skin,
 			removeSkinConfirm,
+			openGameFolder,
 		};
 	},
 });
@@ -191,10 +207,13 @@ export default defineComponent({
 	left: 10px
 	bottom: 10px
 	width: 100%
-	div
+	&>div
 		display: flex
-		align-items: center
-		cursor: pointer
+		justify-content: flex-start
+		&>div
+			cursor: pointer
+			display: flex
+			align-items: center
 	i
 		font-size: 35px
 .r-server-status

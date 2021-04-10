@@ -37,7 +37,7 @@ export const unzipGame = async () => {
 export const unpackAsset = (name: string) => {
 	return new Promise((resolve, reject) => {
 		log('Unzipping Game');
-
+		if (!fs.existsSync(path.join(path.dirname(app.getPath('userData')), 'ioe', name))) return resolve('');
 		const seven = extractFull(
 			path.join(path.dirname(app.getPath('userData')), 'ioe', name),
 			path.join(path.dirname(app.getPath('userData')), 'ioe'),

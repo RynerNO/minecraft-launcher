@@ -66,16 +66,20 @@ const actions = {
 			axios()
 				.post('/verify', payload)
 				.then((response) => {
-					axios()
-						.post('/refresh', payload)
-						.then((response) => {
-							commit('setAuth', response.data);
-						});
-
 					resolve(response.data);
 				})
 				.catch((e) => {
 					reject(e);
+				});
+		});
+	},
+	refresh({ commit }: { commit: Commit }, payload: { accessToken: string }) {
+		return new Promise((resolve, reject) => {
+			axios()
+				.post('/refresh', payload)
+				.then((response) => {
+					commit('setAuth', response.data);
+					resolve(response.data);
 				});
 		});
 	},

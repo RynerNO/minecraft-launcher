@@ -42,7 +42,17 @@ export const checkUpdate = async () => {
 			path.join(path.dirname(app.getPath('userData')), 'ioe', 'minecraft', 'version.txt'),
 			'utf8'
 		);
+
 		if (responseData[0]['tag_name'] == currentVersion) return false;
+
+		// do not try to update while there is no update archive.
+		let isUpdateArchiveAvaliable = false;
+		for (let i = 0; i < responseData['assets'].length; i++) {
+			if (responseData['assets'][i]['name'] === 'update.zip') {
+				isUpdateArchiveAvaliable = true;
+			}
+		}
+		if (!isUpdateArchiveAvaliable) return false;
 		else return true;
 	} catch (e) {}
 };

@@ -51,7 +51,13 @@ export const logout = () => {
 };
 
 export const launchGame = () => {
-	ipc.send('launchGame', JSON.parse(JSON.stringify({ ...store.state.auth, ...store.state.settings })));
+	store.dispatch('refresh', { accessToken: store.state.auth.accessToken }).then((response) => {
+		ipc.send('launchGame', JSON.parse(JSON.stringify({ ...response, ...store.state.settings })));
+	});
+};
+
+export const openGameFolder = () => {
+	ipc.send('openGameFolder');
 };
 
 export const changeRamUsage = (e: { value: number }) => {

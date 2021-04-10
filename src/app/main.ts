@@ -9,7 +9,7 @@ import { App as config } from './config/index';
 import Debug from 'debug';
 import { Client as McProtoClient, PacketWriter, State } from 'mcproto';
 import { checkUpdate, updateGame } from './scripts/gameUpdater';
-
+import open from 'open';
 dotenv.config();
 
 export const log = Debug('App');
@@ -111,6 +111,7 @@ ipcMain.on(
 			const updateAvaliable = await checkUpdate();
 			if (updateAvaliable) await updateGame();
 			const launcher = new Client();
+
 			let opts = {
 				authorization: {
 					access_token: profile.accessToken,
@@ -126,20 +127,22 @@ ipcMain.on(
 				root: path.resolve(path.dirname(app.getPath('userData')), 'ioe', 'minecraft'),
 				version: {
 					type: 'release',
-					number: '1.16.5',
-					custom: 'forge-36.1.0',
+					number: '1.12.2',
+					custom: 'forge-14.23.5.2854',
 				},
 				memory: {
 					max: `${profile.ramUsage / 1024}G`,
-					min: `${profile.ramUsage / 1024}G`,
+					min: `1G`,
 				},
 			};
 
 			launcher.launch(<any>opts);
 			launcher.on('debug', (e) => {
+				console.log(e);
 				mainWindow.webContents.send('gameLaunching', e);
 			});
 			launcher.on('data', (e) => {
+				console.log(e);
 				mainWindow.webContents.send('gameLaunching', e);
 			});
 		}
@@ -173,6 +176,10 @@ ipcMain.on('close', () => {
 
 ipcMain.on('minimize', () => {
 	mainWindow.minimize();
+});
+
+ipcMain.on('openGameFolder', () => {
+	open(path.resolve(path.dirname(app.getPath('userData')), 'ioe', 'minecraft'));
 });
 // {
 //   [2]   description: { text: 'PvP/PvE Server based on Valhelsia modpack' },

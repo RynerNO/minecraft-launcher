@@ -50,6 +50,7 @@ async function getDownloadData() {
 
 export const downloadAsset = (url: string, name: string, size: number) => {
 	return new Promise((resolve, reject) => {
+		if (!url) return resolve('');
 		axios.get(url, { responseType: 'stream' }).then((response) => {
 			mkdirSync(path.join(path.dirname(app.getPath('userData')), 'ioe'), { recursive: true });
 			const file = createWriteStream(path.join(path.dirname(app.getPath('userData')), 'ioe', name));
